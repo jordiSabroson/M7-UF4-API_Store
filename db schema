@@ -1,0 +1,6 @@
+carreto: ID, estat (pagat o no), productes
+usuari: ID, ID_carreto (fk)
+productes: id, 
+llistat_productes: ID_carreto,
+order: ID_carreto (fk)
+pagament: 
