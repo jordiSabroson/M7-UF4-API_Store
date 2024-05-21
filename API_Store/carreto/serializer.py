@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Carreto
+from comandes.models import Ordre
 from cataleg.models import LlistaProductes
 from cataleg.serializer import ProducteSerializer
 
@@ -22,3 +23,9 @@ class LlistaProductesProducteSerializer(serializers.ModelSerializer):
     class Meta:
         model = LlistaProductes
         fields = "_all_"
+
+
+class OrdreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ordre
+        fields = "__all__"

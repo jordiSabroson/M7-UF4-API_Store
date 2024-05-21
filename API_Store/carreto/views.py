@@ -8,6 +8,7 @@ from .serializer import (
 )
 from cataleg.models import LlistaProductes
 from .models import Carreto
+from comandes.models import Ordre
 from django.shortcuts import get_object_or_404
 
 
@@ -97,6 +98,7 @@ def modificarQuantitat(request, id):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+# Consultar el llistat de productes del carretó
 @api_view(["GET"])
 def llistatProductesCarreto(request, pk):
     llista = LlistaProductes.objects.get(carreto_id=pk)
@@ -110,10 +112,16 @@ def comprar(request, id):
     try:
         carreto = Carreto.objects.get(id=id)
     except carreto.DoesNotExist:
-        return Response(status=404)
+        return Response(
+            {"Error": "El carretó no existeix"}, status=status.HTTP_404_NOT_FOUND
+        )
     serializer = CarretoSerializer(carreto, data=request.data, partial=True)
     if serializer.is_valid():
         carreto.estaActiu = False
         serializer.save()
-        return Response(serializer.data)
+
+        nova_comanda = Ordre(carreto=carreto)
+        nova_comanda.save()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
